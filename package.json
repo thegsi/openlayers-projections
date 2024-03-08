@@ -1,0 +1,15 @@
+{
+  "name": "reprojection-wgs84",
+  "dependencies": {
+    "ol": "9.0.0",
+    "proj4": "^2.10.0"
+  },
+  "devDependencies": {
+    "typescript": "latest",
+    "vite": "^3.2.3"
+  },
+  "scripts": {
+    "start": "vite",
+    "build": "vite build"
+  }
+}
