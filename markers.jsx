@@ -51,28 +51,43 @@ fetch('./data/BM_unaligned.json')
 
         const popup = new Overlay({
           element: document.getElementById('popup'),
+          positioning: 'center-center'
         });
         map.addOverlay(popup);
+        const closer = document.getElementById('popup-closer');
 
         const element = popup.getElement();
+
         map.on('click', function(event) {
-            map.forEachFeatureAtPixel(event.pixel, function(feature) {
+            var feature = map.forEachFeatureAtPixel(event.pixel,
+                  function(feature, layer) {
+                      return feature;
+                  });
+            let popover = bootstrap.Popover.getInstance(element);
+            if (popover) {
+              popover.dispose();
+            }
 
-                popup.setPosition(event.coordinate);
+            if (feature) {
+              // https://embed.plnkr.co/plunk/hhEAWk
+              var geometry = feature.getGeometry();
+              var coord = geometry.getCoordinates();
+              popup.setPosition(coord);
 
-                let popover = bootstrap.Popover.getInstance(element);
-                if (popover) {
-                  popover.dispose();
-                }
-                popover = new bootstrap.Popover(element, {
-                  animation: false,
-                  container: element,
-                  content: '<p>' + feature.get('checked_strings') + '</p>',
-                  html: true,
-                  placement: 'top',
-                  title: feature.get('name'),
-                });
-                popover.show();
-            });
+              popover = new bootstrap.Popover(element, {
+                animation: false,
+                container: element,
+                content: '<p>' + feature.get('checked_strings') + '</p>',
+                html: true,
+                title: feature.get('name'),
+              });
+              popover.show(event.coordinate);
+            }
         });
+
+        // closer.onclick = function() {
+        //   overlay.setPosition(undefined);
+        //   closer.blur();
+        //   return false;
+        // };
     });
