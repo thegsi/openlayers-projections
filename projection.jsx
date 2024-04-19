@@ -16,16 +16,21 @@ import {register} from 'ol/proj/proj4.js';
 
 let displayExtent;
 // Mollweide Equi-distant
-const projCode = 'EPSG:54009'
-const projDefs = '+proj=moll +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 ' + '+units=m +no_defs'
-displayExtent = [-18e6, -9e6, 18e6, 9e6]
+// const projCode = 'EPSG:54009'
+// const projDefs = '+proj=moll +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 ' + '+units=m +no_defs'
+// displayExtent = [-18e6, -9e6, 18e6, 9e6]
+// Equidistant Cylindrical
+// const projCode = 'ESRI:53002'
+// const projDefs = '+proj=eqc +lat_ts=60 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +R=6371000 +units=m +no_defs +type=crs'
+// displayExtent = [-18e6, -9e6, 18e6, 9e6]
 // Behrmann Equal Area
-// const projCode = 'ESRI:54017'
-// const projDefs = '+proj=cea +lat_ts=30 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs'
+const projCode = 'ESRI:54017'
+const projDefs = '+proj=cea +lat_ts=30 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs'
 // Albers Equal Area
 // const projCode = 'EPSG:9822'
 // const projDefs = '+proj=lcc +lat_0=42 +lon_0=3 +lat_1=41.25 +lat_2=42.75 +x_0=1700000 +y_0=1200000 +ellps=GRS80+towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs'
 // displayExtent = [-10000000, -10000000, 10000000, 10000000]
+
 
 proj4.defs(
   projCode,
