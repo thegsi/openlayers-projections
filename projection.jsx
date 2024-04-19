@@ -56,19 +56,8 @@ const map = new Map({
     center: fromLonLat([0, 0]),
     zoom: 0,
     extent: displayExtent
-    // center: [0, 0],
-    // zoom: 2,
   }),
 });
-
-var popup = new Overlay({
-    element: document.getElementById('popup'),
-    autoPan: true,
-    autoPanAnimation: {
-        duration: 250
-    }
-});
-map.addOverlay(popup);
 
 // Load GeoJSON file
 fetch('./data/BM_unaligned.json')
@@ -88,45 +77,44 @@ fetch('./data/BM_unaligned.json')
         });
         map.addLayer(vectorLayer);
 
-        const popup = new Overlay({
-          element: document.getElementById('popup'),
-          positioning: 'center-center'
-        });
-        map.addOverlay(popup);
+        const container = document.getElementById('popup');
+        const content = document.getElementById('popup-content');
         const closer = document.getElementById('popup-closer');
-
-        const element = popup.getElement();
+        const overlay = new Overlay({
+          element: container,
+          positioning: 'center-center',
+          autoPan: {
+            animation: {
+              duration: 250,
+            },
+          },
+        });
+        closer.onclick = function () {
+          overlay.setPosition(undefined);
+          closer.blur();
+          return false;
+        };
+        map.addOverlay(overlay);
 
         map.on('click', function(event) {
             var feature = map.forEachFeatureAtPixel(event.pixel,
                   function(feature, layer) {
                       return feature;
                   });
-            let popover = bootstrap.Popover.getInstance(element);
-            if (popover) {
-              popover.dispose();
-            }
+            // console.log(feature);
 
             if (feature) {
-              // https://embed.plnkr.co/plunk/hhEAWk
+              if (overlay.getPosition() !== undefined) {
+          			overlay.setPosition(undefined);
+              }
               var geometry = feature.getGeometry();
               var coord = geometry.getCoordinates();
-              popup.setPosition(coord);
+              var contentHtml = `<p><strong>${feature.get('name')}</strong></p><p>${feature.get('checked_strings')}</p>`
 
-              popover = new bootstrap.Popover(element, {
-                animation: false,
-                container: element,
-                content: '<p>' + feature.get('checked_strings') + '</p>',
-                html: true,
-                title: feature.get('name'),
-              });
-              popover.show(event.coordinate);
+              content.innerHTML =contentHtml
+              overlay.setPosition(coord)
+            } else {
+                overlay.setPosition(undefined)
             }
         });
-
-        // closer.onclick = function() {
-        //   overlay.setPosition(undefined);
-        //   closer.blur();
-        //   return false;
-        // };
     });

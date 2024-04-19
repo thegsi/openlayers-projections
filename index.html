@@ -4,27 +4,46 @@
     <meta charset="UTF-8">
     <title>OpenStreetMap Reprojection</title>
     <link rel="stylesheet" href="node_modules/ol/ol.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
     <style>
-    html, body, .map {
-      /* margin: 0;
-      padding: 0; */
-      width: 100%;
-      height: 100%;
-    }
-
-    #popup {
-      width: 20px;
-      height: 20px;
-      border: 1px solid #088;
-      border-radius: 10px;
-      background-color: #0FF;
-      opacity: 1;
-    }
-    .popover-body {
-      min-width: 276px;
-    }
-    .ol-popup-closer {
+      html, body, .map {
+        /* margin: 0;
+        padding: 0; */
+        width: 100%;
+        height: 100%;
+      }
+      .ol-popup {
+        position: absolute;
+        background-color: white;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        padding: 15px;
+        border-radius: 10px;
+        border: 1px solid #cccccc;
+        bottom: 12px;
+        left: -50px;
+        min-width: 280px;
+      }
+      .ol-popup:after, .ol-popup:before {
+        top: 100%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+      }
+      .ol-popup:after {
+        border-top-color: white;
+        border-width: 10px;
+        left: 48px;
+        margin-left: -10px;
+      }
+      .ol-popup:before {
+        border-top-color: #cccccc;
+        border-width: 11px;
+        left: 48px;
+        margin-left: -11px;
+      }
+      .ol-popup-closer {
         text-decoration: none;
         position: absolute;
         top: 2px;
@@ -38,16 +57,10 @@
   <body>
     <div id="map" class="map"></div>
     <div id="popup" class="ol-popup">
-      <!-- <a href="#" id="popup-closer" class="ol-popup-closer"></a> -->
-      <!-- <button type="button" class="close" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button> -->
+      <a href="#" id="popup-closer" class="ol-popup-closer"></a>
       <div id="popup-content"></div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- <script type="module" src="main.jsx"></script> -->
     <script type="module" src="projection.jsx"></script>
   </body>
 </html>
