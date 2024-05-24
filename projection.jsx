@@ -4,6 +4,7 @@ import XYZ from 'ol/source/XYZ.js';
 import Overlay from 'ol/Overlay.js';
 import TileLayer from 'ol/layer/Tile.js';
 import View from 'ol/View.js';
+import {Circle, Fill, Stroke, Style} from 'ol/style.js';
 import {toStringHDMS} from 'ol/coordinate.js';
 
 import { Vector as VectorLayer } from 'ol/layer';
@@ -64,21 +65,41 @@ const map = new Map({
   }),
 });
 
+const fill = new Fill({
+  color: 'rgba(0,0,0,0.4)',
+});
+const stroke = new Stroke({
+  color: 'black',
+  width: 1.25,
+});
+const markerStyle = [
+   new Style({
+     image: new Circle({
+       fill: fill,
+       stroke: stroke,
+       radius: 4,
+     }),
+     fill: fill,
+     stroke: stroke,
+   }),
+];
+
 // Load GeoJSON file
-fetch('./data/BM_unaligned.json')
+fetch('./data/BM_ol_hack.json')
     .then(response => response.json())
     .then(data => {
 
         var features = new GeoJSON().readFeatures(data, {
-            // featureProjection: 'EPSG:3857'
-            featureProjection: projCode
+          // featureProjection: 'EPSG:3857'
+          featureProjection: projCode
         });
         var vectorSource = new VectorSource({
-            features: features
+          features: features
         });
         // Create a vector layer to hold the markers
         var vectorLayer = new VectorLayer({
-             source: vectorSource
+           source: vectorSource,
+           style:markerStyle
         });
         map.addLayer(vectorLayer);
 
@@ -102,24 +123,27 @@ fetch('./data/BM_unaligned.json')
         map.addOverlay(overlay);
 
         map.on('click', function(event) {
-            var feature = map.forEachFeatureAtPixel(event.pixel,
-                  function(feature, layer) {
-                      return feature;
-                  });
-            // console.log(feature);
+          var feature = map.forEachFeatureAtPixel(event.pixel,
+            function(feature, layer) {
+                return feature;
+            });
 
-            if (feature) {
-              if (overlay.getPosition() !== undefined) {
-          			overlay.setPosition(undefined);
-              }
-              var geometry = feature.getGeometry();
-              var coord = geometry.getCoordinates();
-              var contentHtml = `<p><strong>${feature.get('name')}</strong></p><p>${feature.get('checked_strings')}</p>`
-
-              content.innerHTML =contentHtml
-              overlay.setPosition(coord)
-            } else {
-                overlay.setPosition(undefined)
+          if (feature) {
+            if (overlay.getPosition() !== undefined) {
+        			overlay.setPosition(undefined);
             }
+            var geometry = feature.getGeometry();
+            var coord = geometry.getCoordinates();
+            var placeName = feature.get('title')
+            var placeNameUrl = `https://knowledgebase.sloanelab.org/resource/?uri=http%3A%2F%2Fsloanelab.org%2FE53%2F${placeName}`
+
+            var contentHtml = `<p><strong>${placeName}</strong></p><p>${feature.get('value')}</p><p>${feature.get('type')}</p>
+            <p><a href="${placeNameUrl}" target="_blank">Click to access ${placeName}</a>`
+
+            content.innerHTML =contentHtml
+            overlay.setPosition(coord)
+          } else {
+            overlay.setPosition(undefined)
+          }
         });
     });
