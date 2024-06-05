@@ -85,7 +85,7 @@ const markerStyle = [
 ];
 
 // Load GeoJSON file
-fetch('/data/BM_ol_hack.json')
+fetch('/data/hacked_places.json')
     .then(response => response.json())
     .then(data => {
 
