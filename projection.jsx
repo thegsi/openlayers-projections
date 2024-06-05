@@ -21,12 +21,12 @@ let displayExtent;
 // const projDefs = '+proj=moll +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 ' + '+units=m +no_defs'
 // displayExtent = [-18e6, -9e6, 18e6, 9e6]
 // Equidistant Cylindrical
-// const projCode = 'ESRI:53002'
-// const projDefs = '+proj=eqc +lat_ts=60 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +R=6371000 +units=m +no_defs +type=crs'
-// displayExtent = [-18e6, -9e6, 18e6, 9e6]
+const projCode = 'ESRI:53002'
+const projDefs = '+proj=eqc +lat_ts=60 +lat_0=0 +lon_0=0 +x_0=0 +y_0=0 +R=6371000 +units=m +no_defs +type=crs'
+displayExtent = [-18e6, -9e6, 18e6, 9e6]
 // Behrmann Equal Area
-const projCode = 'ESRI:54017'
-const projDefs = '+proj=cea +lat_ts=30 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs'
+// const projCode = 'ESRI:54017'
+// const projDefs = '+proj=cea +lat_ts=30 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs'
 // Albers Equal Area
 // const projCode = 'EPSG:9822'
 // const projDefs = '+proj=lcc +lat_0=42 +lon_0=3 +lat_1=41.25 +lat_2=42.75 +x_0=1700000 +y_0=1200000 +ellps=GRS80+towgs84=0,0,0,0,0,0,0 +units=m +no_defs +type=crs'
@@ -85,7 +85,7 @@ const markerStyle = [
 ];
 
 // Load GeoJSON file
-fetch('./data/BM_ol_hack.json')
+fetch('/data/BM_ol_hack.json')
     .then(response => response.json())
     .then(data => {
 
@@ -134,10 +134,15 @@ fetch('./data/BM_ol_hack.json')
             }
             var geometry = feature.getGeometry();
             var coord = geometry.getCoordinates();
-            var placeName = feature.get('title')
-            var placeNameUrl = `https://knowledgebase.sloanelab.org/resource/?uri=http%3A%2F%2Fsloanelab.org%2FE53%2F${placeName}`
+            var placeName = feature.get('title') || ''
+            var placeNameUrl = ''
+            if (placeName !== '') {
+              var placeNameUrl = `https://knowledgebase.sloanelab.org/resource/?uri=http%3A%2F%2Fsloanelab.org%2FE53%2F${placeName}`
+            }
+            var value = feature.get('value') || ''
+            var type = feature.get('type') || ''
 
-            var contentHtml = `<p><strong>${placeName}</strong></p><p>${feature.get('value')}</p><p>${feature.get('type')}</p>
+            var contentHtml = `<p><strong>${placeName}</strong></p><p>${value}</p><p>${type}</p>
             <p><a href="${placeNameUrl}" target="_blank">Click to access ${placeName}</a>`
 
             content.innerHTML =contentHtml
